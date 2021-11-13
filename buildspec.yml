@@ -5,9 +5,6 @@ phases:
     commands:
       - echo pre build ....
       - aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 786766101582.dkr.ecr.ap-southeast-2.amazonaws.com
-      - REPOSITORY_URI=786766101582.dkr.ecr.ap-southeast-2.amazonaws.com/base-node-ts-ecr
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
       - echo DMS --- Build started on `date`
@@ -16,12 +13,12 @@ phases:
       - echo DMS --- Start npm install .....
       - npm run build
       - echo DMS --- Building the Docker image...
-      - docker build -t $REPOSITORY_URI:$IMAGE_TAG
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker build -t base-node-ts-ecr .
+      - docker tag base-node-ts-ecr:latest 786766101582.dkr.ecr.ap-southeast-2.amazonaws.com/base-node-ts-ecr:latest
   post_build:
     commands:
       - echo Build completed on `date`
-      - docker push $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push 786766101582.dkr.ecr.ap-southeast-2.amazonaws.com/base-node-ts-ecr:latest
       - echo Writing image definitions file...
       - printf '[{"name":"base-node-ts-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
