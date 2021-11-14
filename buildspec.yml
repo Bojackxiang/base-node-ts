@@ -20,6 +20,6 @@ phases:
       - echo Build completed on `date`
       - docker push 786766101582.dkr.ecr.ap-southeast-2.amazonaws.com/base-node-ts-ecr:latest
       - echo Writing image definitions file...
-      - printf '[{"name":"base-node-ts-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"base-node-ts-container","imageUri":786766101582.dkr.ecr.ap-southeast-2.amazonaws.com/latest"}]'  > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
